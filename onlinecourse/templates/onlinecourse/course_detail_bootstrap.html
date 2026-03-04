@@ -51,6 +51,31 @@
                 {% endfor %}
             </div>
             <!-- Course detail template changes go here -->
+            {% if user.is_authenticated %}
+            <div class="card mt-4">
+                <div class="card-header"><h5>Exam</h5></div>
+                <div class="card-body">
+                    <form id="quizForm" method="post" action="{% url 'onlinecourse:submit_exam' %}">
+                        {% csrf_token %}
+                        {% for question in course.question_set.all %}
+                        <div class="question mb-3">
+                            <p><strong>{{ question.content }}</strong> ({{ question.grade }} points)</p>
+                            {% for choice in question.choice_set.all %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="choice_{{ question.id }}" value="{{ choice.id }}" id="choice_{{ choice.id }}">
+                                <label class="form-check-label" for="choice_{{ choice.id }}">
+                                    {{ choice.content }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">Submit Exam</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
     </div>
 </body>
 </html>
